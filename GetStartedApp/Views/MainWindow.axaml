@@ -15,18 +15,29 @@
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <StackPanel>
-        <Border Margin="5" CornerRadius="10" Background="LightBlue">
-            <TextBlock Margin="5" HorizontalAlignment="Center" FontSize="24" Text="Temperature Converter"></TextBlock>
-        </Border>
-        <Grid ShowGridLines="True" Margin="5" ColumnDefinitions="120, 100" RowDefinitions="Auto, Auto, Auto">
-            <Label Grid.Row="0" Grid.Column="0">Celsius</Label>
-            <TextBox Grid.Row="0" Grid.Column="1"></TextBox>
+    <Grid RowDefinitions="Auto, *, Auto" x:Name="Root">
+        <!-- Title text block -->
+        <TextBlock Text="ToDos" />
 
-            <Label Grid.Row="1" Grid.Column="0">Fahrenheit</Label>
-            <TextBox Grid.Row="1" Grid.Column="1"></TextBox>
+        <ScrollViewer Grid.Row="1">
+            <!-- This ItemsControl will show all added ToDos -->
+            <ItemsControl ItemsSource="{Binding ToDoItems}"></ItemsControl>
+        </ScrollViewer>
 
-            <Button Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center">Calculate</Button>
-        </Grid>
-    </StackPanel>
+        <!-- This TextBox can be used to add new ToDoItems -->
+        <TextBox Grid.Row="2"
+                 Text="{Binding NewItemContent}"
+                 Watermark="Add a new ToDo">
+            <TextBox.InnerRightContent>
+                <Button Command="{Binding AddItemCommand}">
+                    Add
+                </Button>
+            </TextBox.InnerRightContent>
+            <!--  KeyBindings allow us to define keyboard gestures  -->
+            <TextBox.KeyBindings>
+                <KeyBinding Command="{Binding AddItemCommand}" Gesture="Enter" />
+            </TextBox.KeyBindings>
+        </TextBox>
+    </Grid>
+
 </Window>
