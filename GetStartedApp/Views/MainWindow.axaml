@@ -17,11 +17,30 @@
 
     <Grid RowDefinitions="Auto, *, Auto" x:Name="Root">
         <!-- Title text block -->
-        <TextBlock Text="ToDos" />
+        <TextBlock Classes="h1" Text="ToDos" />
 
         <ScrollViewer Grid.Row="1">
             <!-- This ItemsControl will show all added ToDos -->
-            <ItemsControl ItemsSource="{Binding ToDoItems}"></ItemsControl>
+            <ItemsControl ItemsSource="{Binding ToDoItems}">
+                <ItemsControl.ItemTemplate>
+                    <!-- This item template defines how each item should be represented -->
+                    <!-- The item will be represented by a CheckBox and a Delete-Button -->
+                    <DataTemplate DataType="vm:ToDoItemViewModel">
+                        <Grid ColumnDefinitions="*, Auto">
+                            <CheckBox Content="{Binding Content}"
+                                      IsChecked="{Binding IsChecked}" />
+
+                            <!-- Note how the Root-Grid is used to get the MainViewModel here -->
+                            <!-- As we use compiled bindings we have to cast the DataContext -->
+                            <Button Command="{Binding #Root.((vm:MainWindowViewModel)DataContext).RemoveItemCommand}"
+                                    CommandParameter="{Binding .}"
+                                    Grid.Column="1">
+                                <PathIcon Data="{DynamicResource DeleteIconData}" />
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </ScrollViewer>
 
         <!-- This TextBox can be used to add new ToDoItems -->
@@ -30,7 +49,7 @@
                  Watermark="Add a new ToDo">
             <TextBox.InnerRightContent>
                 <Button Command="{Binding AddItemCommand}">
-                    Add
+                    <PathIcon Data="{DynamicResource AcceptIconData}" />
                 </Button>
             </TextBox.InnerRightContent>
             <!--  KeyBindings allow us to define keyboard gestures  -->
